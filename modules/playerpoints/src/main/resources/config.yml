@@ -1,0 +1,19 @@
+# PlayerPoints Addon Configuration
+# This addon tracks point transactions in ServerStats analytics
+
+# Enable debug logging for troubleshooting
+debug: false
+
+tracking:
+  # Track point changes (give, take, pay, etc.)
+  track_changes: true
+
+  # Track point resets
+  track_resets: true
+
+  # Minimum point change to track (filters out tiny changes)
+  # Set to 0 to track all changes
+  minimum_change: 0
+
+  # Track the source/reason of point changes if available
+  include_change_type: true

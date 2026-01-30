@@ -10,6 +10,7 @@ These addons extend ServerStats by integrating with popular plugins to automatic
 |-------|--------|----------------|
 | **ShopGUIPlus** | [ShopGUIPlus](https://www.spigotmc.org/resources/shopgui-1-7-1-21.6515/) | Purchases, sales, sell-all transactions |
 | **Votifier** | [NuVotifier](https://www.spigotmc.org/resources/nuvotifier.13449/) | Player votes from voting sites |
+| **PlayerPoints** | [PlayerPoints](https://www.spigotmc.org/resources/playerpoints.80745/) | Point transactions (give, take, reset) |
 
 ## Installation
 
@@ -69,6 +70,18 @@ tracking:
   include_timestamp: true
 ```
 
+### PlayerPoints Config
+
+```yaml
+debug: false
+
+tracking:
+  track_changes: true    # Track give/take
+  track_resets: true     # Track point resets
+  minimum_change: 0      # Filter small changes
+  include_change_type: true
+```
+
 ## Building from Source
 
 ### Prerequisites
@@ -85,6 +98,7 @@ tracking:
 # Build specific addon
 ./gradlew :modules:shopguiplus:build
 ./gradlew :modules:votifier:build
+./gradlew :modules:playerpoints:build
 
 # Clean and build
 ./gradlew clean build

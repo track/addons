@@ -49,6 +49,7 @@ jobs:
             ### Included Addons
             - **ShopGUIPlus** - Tracks shop purchases and sales
             - **Votifier** - Tracks player votes
+            - **PlayerPoints** - Tracks point transactions
             
             ### Installation
             1. Download the addon JAR(s) you want
