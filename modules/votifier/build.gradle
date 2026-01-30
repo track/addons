@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    maven { url = 'https://jitpack.io' }
+}
+
+dependencies {
+    // Paper API - for Bukkit events and player access
+    compileOnly "io.papermc.paper:paper-api:${project.property('paperVersion')}"
+
+    // NuVotifier API
+    compileOnly "com.github.NuVotifier:NuVotifier:2.7.2"
+}
+
+jar {
+    archiveBaseName.set('serverstats-addon-votifier')
+}

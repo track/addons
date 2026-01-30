@@ -1,0 +1,20 @@
+# Votifier Addon Configuration
+# This addon tracks player votes in ServerStats analytics
+
+# Enable debug logging for troubleshooting
+debug: false
+
+tracking:
+  # Track votes from all services, or only specific ones
+  # Leave empty to track all services
+  # Example: ['minecraft-server-list.com', 'minecraftservers.org']
+  services: []
+
+  # Include the voting service name in tracked data
+  include_service: true
+
+  # Include the voter's IP address in tracked data (privacy consideration)
+  include_address: false
+
+  # Include the timestamp from the vote (when the vote was cast)
+  include_timestamp: true

@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+}
+
+allprojects {
+    group = project.property('group')
+    version = project.property('version')
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+        maven { url = 'https://jitpack.io' } 
+        maven { 
+            url = 'https://maven.analyse.net/repository/maven-releases/'
+        }
+    }
+
+    dependencies {
+        // ServerStats API - provided at runtime by the plugin
+        compileOnly "com.serverstats:serverstats-api:${project.property('serverStatsApiVersion')}"
+
+        // Lombok
+        compileOnly "org.projectlombok:lombok:${project.property('lombokVersion')}"
+        annotationProcessor "org.projectlombok:lombok:${project.property('lombokVersion')}"
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+
+    // Create a clean JAR without dependencies (addon JARs should be lightweight)
+    jar {
+        // Include addon info in manifest
+        manifest {
+            attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+            )
+        }
+    }
+}

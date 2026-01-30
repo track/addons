@@ -1,0 +1,8 @@
+rootProject.name = 'serverstats-addons'
+
+// Auto-discover all modules in the modules/ directory
+file('modules').eachDir { moduleDir ->
+    def moduleName = moduleDir.name
+    include "modules:${moduleName}"
+    project(":modules:${moduleName}").projectDir = moduleDir
+}

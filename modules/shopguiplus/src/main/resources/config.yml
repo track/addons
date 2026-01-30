@@ -1,0 +1,34 @@
+# ShopGUIPlus Addon Configuration
+# This addon tracks shop transactions in ServerStats analytics
+
+# Enable debug logging for troubleshooting
+debug: false
+
+tracking:
+  # Which transaction results to track
+  # Only transactions with these results will be sent to ServerStats
+  #
+  # Available options:
+  #   - SUCCESS          - Transaction completed successfully
+  #   - FAIL             - Transaction failed (generic)
+  #   - NO_PERMISSION    - Player lacks permission
+  #   - NOT_ENOUGH_MONEY - Player can't afford the purchase
+  #   - NOT_ENOUGH_SPACE - Player's inventory is full
+  #   - NOT_ENOUGH_ITEMS - Player doesn't have enough items to sell
+  #
+  # Default: Only track successful transactions
+  results:
+    - SUCCESS
+
+  # Which shop actions to track
+  #
+  # Available options:
+  #   - BUY      - Player purchases items from shop
+  #   - SELL     - Player sells items to shop
+  #   - SELL_ALL - Player sells all matching items
+  #
+  # Default: Track all actions
+  actions:
+    - BUY
+    - SELL
+    - SELL_ALL
