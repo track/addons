@@ -205,5 +205,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Links
 
 - [ServerStats Website](https://serverstats.com)
-- [ServerStats Documentation](https://docs.serverstats.com)
+- [ServerStats Documentation](https://serverstats.com/docs)
 - [Discord Support](https://discord.gg/serverstats)
