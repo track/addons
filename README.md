@@ -2,7 +2,7 @@
 
 The source repository for the official [Analyse](https://analyse.net) addons &mdash; plug-in integrations that teach Analyse about events coming from other plugins (shop sales, votes, point transactions, and so on).
 
-Analyse is the analytics platform purpose-built for Minecraft and Hytale servers. The main plugin lives in [`Analyse-net/analyse-java`](https://github.com/Analyse-net/analyse-java). This repository is the home of the first-party addons that ship alongside it.
+Analyse is the analytics platform purpose-built for Minecraft and Hytale servers. The main plugin lives in [`track/analyse-java`](https://github.com/track/analyse-java). This repository is the home of the first-party addons that ship alongside it.
 
 ## Available addons
 
@@ -15,7 +15,7 @@ Analyse is the analytics platform purpose-built for Minecraft and Hytale servers
 ## Getting started
 
 1. Install the [Analyse plugin](https://analyse.net/downloads) (v1.0.0 or newer) and configure your API key.
-2. Download the addon jar(s) you want from the [releases page](https://github.com/Analyse-net/addons/releases).
+2. Download the addon jar(s) you want from the [releases page](https://github.com/track/addons/releases).
 3. Drop them in `plugins/Analyse/addons/`.
 4. Start the server once so the addon config generates, or run `/analyse reload`.
 5. Edit `plugins/Analyse/addons/<addon>/config.yml` if you want to tweak what gets tracked.
@@ -209,7 +209,7 @@ addons/
 ## Documentation
 
 - Main plugin docs: [analyse.net/docs](https://analyse.net/docs)
-- SDK overview: [analyse-java/docs/sdk](https://github.com/Analyse-net/analyse-java/blob/main/docs/sdk/README.md)
+- SDK overview: [analyse-java/docs/sdk](https://github.com/track/analyse-java/blob/main/docs/sdk/README.md)
 
 ## Support
 

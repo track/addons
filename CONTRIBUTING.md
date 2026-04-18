@@ -9,7 +9,7 @@ Thanks for taking the time to help improve the Analyse addons. This page is the 
 
 Also:
 
-- Check the [issue tracker](https://github.com/Analyse-net/addons/issues) first. If an issue doesn't exist for what you want to change, open one. Large unsolicited PRs (including whole new addons) are unlikely to be merged without prior discussion.
+- Check the [issue tracker](https://github.com/track/addons/issues) first. If an issue doesn't exist for what you want to change, open one. Large unsolicited PRs (including whole new addons) are unlikely to be merged without prior discussion.
 - Keep PRs focused. One logical change per PR. Refactors and feature work in separate PRs please.
 - Follow the code style below.
 
@@ -21,7 +21,7 @@ Requirements:
 - Git
 
 ```bash
-git clone https://github.com/Analyse-net/addons
+git clone https://github.com/track/addons
 cd addons
 ./gradlew build
 ```
@@ -30,7 +30,7 @@ Jar files land in each `modules/*/build/libs/` directory, named `analyse-addon-<
 
 ### Resolving `net.analyse:analyse-api` locally
 
-The addons depend on the `analyse-api` artifact at the version pinned in `gradle.properties`. Published releases are served from `https://repo.analyse.net/releases`. If you're working against an unreleased API version (for example, a feature branch in [`analyse-java`](https://github.com/Analyse-net/analyse-java)), publish it to your local Maven repo first:
+The addons depend on the `analyse-api` artifact at the version pinned in `gradle.properties`. Published releases are served from `https://repo.analyse.net/releases`. If you're working against an unreleased API version (for example, a feature branch in [`analyse-java`](https://github.com/track/analyse-java)), publish it to your local Maven repo first:
 
 ```bash
 cd ../analyse-java
@@ -119,7 +119,7 @@ Before you click "ready for review":
 
 ## Reporting bugs
 
-Open a [bug report](https://github.com/Analyse-net/addons/issues/new?template=bug_report.md). Include:
+Open a [bug report](https://github.com/track/addons/issues/new?template=bug_report.md). Include:
 
 - Which addon is affected.
 - The addon version and the Analyse plugin version.
@@ -135,6 +135,6 @@ Please do NOT open a public issue for security vulnerabilities. See [SECURITY.md
 
 ## Questions
 
-For usage questions, use [GitHub Discussions](https://github.com/Analyse-net/addons/discussions) or the [Analyse Discord](https://analyse.net). Issues are for bugs and feature requests only.
+For usage questions, use [GitHub Discussions](https://github.com/track/addons/discussions) or the [Analyse Discord](https://analyse.net). Issues are for bugs and feature requests only.
 
 Thanks again.

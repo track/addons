@@ -29,7 +29,7 @@ Reports about the following are in scope:
 - The addons in this repository (ShopGUIPlus, Votifier, PlayerPoints, and any future addons).
 - Interaction between these addons and the Analyse plugin or SDK.
 
-The Analyse plugins themselves live in a separate repository with its own [security policy](https://github.com/Analyse-net/analyse-java/security/policy). The Analyse dashboard, API, and website are covered by a separate security policy at [analyse.net/security](https://analyse.net/security).
+The Analyse plugins themselves live in a separate repository with its own [security policy](https://github.com/track/analyse-java/security/policy). The Analyse dashboard, API, and website are covered by a separate security policy at [analyse.net/security](https://analyse.net/security).
 
 ## Out of scope
 
