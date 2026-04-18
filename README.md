@@ -1,40 +1,43 @@
-# ServerStats Addons
+# Analyse Addons
 
-Official addon collection for [ServerStats](https://serverstats.com) - the analytics platform for Minecraft servers.
+The source repository for the official [Analyse](https://analyse.net) addons &mdash; plug-in integrations that teach Analyse about events coming from other plugins (shop sales, votes, point transactions, and so on).
 
-These addons extend ServerStats by integrating with popular plugins to automatically track events and player activity.
+Analyse is the analytics platform purpose-built for Minecraft and Hytale servers. The main plugin lives in [`Analyse-net/analyse-java`](https://github.com/Analyse-net/analyse-java). This repository is the home of the first-party addons that ship alongside it.
 
-## Available Addons
+## Available addons
 
-| Addon | Plugin | Events Tracked |
-|-------|--------|----------------|
-| **ShopGUIPlus** | [ShopGUIPlus](https://www.spigotmc.org/resources/shopgui-1-7-1-21.6515/) | Purchases, sales, sell-all transactions |
-| **Votifier** | [NuVotifier](https://www.spigotmc.org/resources/nuvotifier.13449/) | Player votes from voting sites |
-| **PlayerPoints** | [PlayerPoints](https://www.spigotmc.org/resources/playerpoints.80745/) | Point transactions (give, take, reset) |
+| Addon | Plugin it hooks | Events tracked |
+| --- | --- | --- |
+| **ShopGUIPlus** | [ShopGUIPlus](https://www.spigotmc.org/resources/shopgui-1-7-1-21.6515/) | `shopguiplus.purchase`, `shopguiplus.sell`, `shopguiplus.sell_all` |
+| **Votifier** | [NuVotifier](https://www.spigotmc.org/resources/nuvotifier.13449/) | `votifier.vote` |
+| **PlayerPoints** | [PlayerPoints](https://www.spigotmc.org/resources/playerpoints.80745/) | `playerpoints.give`, `playerpoints.take`, `playerpoints.reset` |
 
-## Installation
+## Getting started
 
-1. Download the addon JAR(s) from the [Releases](../../releases) page
-2. Place them in your server's `plugins/ServerStats/addons/` folder
-3. Restart your server or run `/serverstats reload`
-4. Configure the addon in `plugins/ServerStats/addons/<addon-name>/config.yml`
+1. Install the [Analyse plugin](https://analyse.net/downloads) (v1.0.0 or newer) and configure your API key.
+2. Download the addon jar(s) you want from the [releases page](https://github.com/Analyse-net/addons/releases).
+3. Drop them in `plugins/Analyse/addons/`.
+4. Start the server once so the addon config generates, or run `/analyse reload`.
+5. Edit `plugins/Analyse/addons/<addon>/config.yml` if you want to tweak what gets tracked.
 
 ## Requirements
-- **ServerStats** plugin (v0.6.0+)
+
+- **Analyse** plugin 1.0.0+
 - **Java 21** or higher
-- **Paper/Spigot** 1.21.4+ (or compatible fork)
-- The corresponding plugin for each addon
+- **Paper / Spigot / Purpur / Folia** 1.21.4+ (or a compatible fork)
+- The corresponding third-party plugin for each addon (ShopGUIPlus, NuVotifier, PlayerPoints, etc.)
 
 ## Configuration
 
-Each addon has its own configuration file located at:
+Each addon has its own config under:
+
 ```
-plugins/ServerStats/addons/<addon-name>/config.yml
+plugins/Analyse/addons/<addon>/config.yml
 ```
 
-Configurations are automatically created on first load. Use `/serverstats reload` to reload addon configs without restarting.
+The file is generated on first load. Use `/analyse reload` to pick up changes without restarting.
 
-### ShopGUIPlus Config
+### ShopGUIPlus
 
 ```yaml
 debug: false
@@ -48,14 +51,14 @@ tracking:
     # - NOT_ENOUGH_SPACE
     # - NOT_ENOUGH_ITEMS
 
-  # Which actions to track
+  # Which shop actions to track
   actions:
     - BUY
     - SELL
     - SELL_ALL
 ```
 
-### Votifier Config
+### Votifier
 
 ```yaml
 debug: false
@@ -64,57 +67,52 @@ tracking:
   # Only track specific voting services (empty = all)
   services: []
 
-  # Data to include in tracked events
   include_service: true
-  include_address: false  # Privacy consideration
+  include_address: false  # privacy consideration, off by default
   include_timestamp: true
 ```
 
-### PlayerPoints Config
+### PlayerPoints
 
 ```yaml
 debug: false
 
 tracking:
-  track_changes: true    # Track give/take
-  track_resets: true     # Track point resets
-  minimum_change: 0      # Filter small changes
+  track_changes: true    # give / take
+  track_resets: true     # resets
+  minimum_change: 0      # filter tiny changes
   include_change_type: true
 ```
 
-## Building from Source
-
-### Prerequisites
-
-- Java 21 JDK
-- Gradle (wrapper included)
-
-### Build Commands
+## Building from source
 
 ```bash
-# Build all addons
-./gradlew build
-
-# Build specific addon
-./gradlew :modules:shopguiplus:build
-./gradlew :modules:votifier:build
-./gradlew :modules:playerpoints:build
-
-# Clean and build
 ./gradlew clean build
 ```
 
-Output JARs are located in `modules/<addon>/build/libs/`.
+Per-addon builds:
 
-## Creating a New Addon
+```bash
+./gradlew :modules:shopguiplus:build
+./gradlew :modules:votifier:build
+./gradlew :modules:playerpoints:build
+```
 
-1. Create a new module folder:
+Output jars land in `modules/<addon>/build/libs/analyse-addon-<addon>-<version>.jar`.
+
+The `scripts/release.sh` script builds every addon and bundles the jars into a single `analyse-addons-<version>.zip` archive.
+
+## Creating a new addon
+
+1. Create a module folder:
+
    ```bash
-   mkdir -p modules/myaddon/src/main/java/com/serverstats/addon/myaddon
+   mkdir -p modules/myaddon/src/main/java/net/analyse/addon/myaddon
    mkdir -p modules/myaddon/src/main/resources
    ```
 
 2. Create `modules/myaddon/build.gradle`:
+
    ```groovy
    plugins {
        id 'java'
@@ -122,16 +120,25 @@ Output JARs are located in `modules/<addon>/build/libs/`.
 
    dependencies {
        compileOnly "io.papermc.paper:paper-api:${project.property('paperVersion')}"
-       // Add your plugin's API dependency here
+       // Add the third-party plugin's API dependency here
    }
 
    jar {
-       archiveBaseName.set('serverstats-addon-myaddon')
+       archiveBaseName.set('analyse-addon-myaddon')
    }
    ```
 
 3. Create your addon class with the `@AddonInfo` annotation:
+
    ```java
+   package net.analyse.addon.myaddon;
+
+   import net.analyse.api.addon.Addon;
+   import net.analyse.api.addon.AddonInfo;
+   import net.analyse.api.addon.AddonLogger;
+   import net.analyse.api.platform.AnalysePlatform;
+   import java.nio.file.Path;
+
    @AddonInfo(
      id = "myaddon",
      name = "My Addon",
@@ -140,84 +147,78 @@ Output JARs are located in `modules/<addon>/build/libs/`.
      description = "Description of what this addon tracks"
    )
    public class MyAddon implements Addon {
-       // Implementation
+     // ...
    }
    ```
 
-4. The module is automatically discovered - just run `./gradlew build`
+4. The module is auto-discovered by `settings.gradle`. Just run `./gradlew build`.
 
-### Addon Lifecycle
+### Addon lifecycle
 
 ```java
 public class MyAddon implements Addon {
-    
-    @Override
-    public void onLoad(ServerStatsPlatform platform, AddonLogger logger, Path dataFolder) {
-        // Called when addon is loaded - store references
-    }
-    
-    @Override
-    public void onEnable() {
-        // Called when addon is enabled - register listeners
-    }
-    
-    @Override
-    public void onDisable() {
-        // Called when addon is disabled - cleanup
-    }
-    
-    @Override
-    public void onReload() {
-        // Called on /serverstats reload - reload config
-    }
+
+  @Override
+  public void onLoad(AnalysePlatform platform, AddonLogger logger, Path dataFolder) {
+    // Store references
+  }
+
+  @Override
+  public void onEnable() {
+    // Register listeners, open resources
+  }
+
+  @Override
+  public void onDisable() {
+    // Clean up
+  }
+
+  @Override
+  public void onReload() {
+    // Reload config on /analyse reload
+  }
 }
 ```
 
-### Tracking Events
+### Tracking events
 
 ```java
-ServerStats.trackEvent("myaddon.event_name")
-    .withPlayer(player.getUniqueId(), player.getName())
-    .withValue(123.45)  // Optional numeric value
-    .withData("key", "value")  // Additional data
-    .send();
+Analyse.trackEvent("myaddon.event_name")
+  .withPlayer(player.getUniqueId(), player.getName())
+  .withValue(123.45)           // optional numeric value
+  .withData("key", "value")    // optional extra fields
+  .send();
 ```
 
-## Project Structure
+## Project structure
 
 ```
 addons/
-├── .github/workflows/    # CI/CD workflows
+├── .cursor/rules/        # Java style guide + commit rules
+├── .github/              # CI, release, issue / PR templates, Dependabot
 ├── modules/              # Addon modules (auto-discovered)
 │   ├── shopguiplus/
-│   │   ├── build.gradle
-│   │   └── src/main/
-│   │       ├── java/...
-│   │       └── resources/config.yml
-│   └── votifier/
-│       ├── build.gradle
-│       └── src/main/
-│           ├── java/...
-│           └── resources/config.yml
-├── build.gradle          # Root build config
+│   ├── votifier/
+│   └── playerpoints/
+├── scripts/release.sh    # Local release bundler
+├── build.gradle          # Root build
 ├── settings.gradle       # Module discovery
 └── gradle.properties     # Shared properties
 ```
 
-## Contributing
+## Documentation
 
-1. Fork this repository
-2. Create a feature branch (`git checkout -b feature/my-addon`)
-3. Commit your changes (`git commit -am 'Add my addon'`)
-4. Push to the branch (`git push origin feature/my-addon`)
-5. Create a Pull Request
+- Main plugin docs: [analyse.net/docs](https://analyse.net/docs)
+- SDK overview: [analyse-java/docs/sdk](https://github.com/Analyse-net/analyse-java/blob/main/docs/sdk/README.md)
+
+## Support
+
+- Website: [analyse.net](https://analyse.net)
+- Dashboard: [analyse.net/dashboard](https://analyse.net/dashboard)
+- Discord: linked from [analyse.net](https://analyse.net)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Copyright &copy; VertCode Development E.E. All rights reserved.
 
-## Links
-
-- [ServerStats Website](https://serverstats.com)
-- [ServerStats Documentation](https://serverstats.com/docs)
-- [Discord Support](https://discord.gg/serverstats)
+The source in this repository is published for transparency and reference. It is **not** open source; copying, modifying, redistributing, or running modified builds is not permitted. See [`LICENSE`](LICENSE) for the full terms.

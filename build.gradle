@@ -7,7 +7,9 @@ allprojects {
     version = project.property('version')
 }
 
-subprojects {
+// Only leaf addon modules get the `java` plugin. The intermediate `:modules`
+// project exists only as a grouping and should not produce a jar.
+configure(subprojects.findAll { it.parent?.name == 'modules' }) {
     apply plugin: 'java'
 
     java {
@@ -16,17 +18,18 @@ subprojects {
     }
 
     repositories {
+        // mavenLocal first so `./gradlew publishToMavenLocal` in analyse-java works
+        // without waiting for a release to be pushed to repo.analyse.net.
+        mavenLocal()
         mavenCentral()
         maven { url = 'https://repo.papermc.io/repository/maven-public/' }
-        maven { url = 'https://jitpack.io' } 
-        maven { 
-            url = 'https://maven.analyse.net/repository/maven-releases/'
-        }
+        maven { url = 'https://jitpack.io' }
+        maven { url = 'https://repo.analyse.net/releases' }
     }
 
     dependencies {
-        // ServerStats API - provided at runtime by the plugin
-        compileOnly "com.serverstats:serverstats-api:${project.property('serverStatsApiVersion')}"
+        // Analyse API - provided at runtime by the Analyse plugin
+        compileOnly "net.analyse:analyse-api:${project.property('analyseApiVersion')}"
 
         // Lombok
         compileOnly "org.projectlombok:lombok:${project.property('lombokVersion')}"
@@ -37,9 +40,8 @@ subprojects {
         options.encoding = 'UTF-8'
     }
 
-    // Create a clean JAR without dependencies (addon JARs should be lightweight)
+    // Addon jars are lightweight - no fat-jar, dependencies are compileOnly
     jar {
-        // Include addon info in manifest
         manifest {
             attributes(
                 'Implementation-Title': project.name,

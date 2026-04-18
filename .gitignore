@@ -1,38 +1,37 @@
 # Gradle
 .gradle/
 build/
-**/build/
+!gradle/wrapper/gradle-wrapper.jar
+out/
 
-# IDE - IntelliJ IDEA
+# IDE
 .idea/
 *.iml
 *.ipr
 *.iws
-out/
-
-# IDE - Eclipse
-.classpath
 .project
+.classpath
 .settings/
-bin/
-
-# IDE - VS Code
 .vscode/
-*.code-workspace
+*.swp
+*.swo
 
 # OS
 .DS_Store
 Thumbs.db
-desktop.ini
 
-# Logs
-*.log
+# Runtime
+run/
 logs/
+*.log
 
-# Local configuration
+# Addon configs (generated at runtime)
+config.yml
+!**/src/main/resources/config.yml
+
+# Local properties
 local.properties
-*.local
 
-# Runtime data
-hs_err_pid*
-replay_pid*
+# Release artifacts
+*.zip
+*.tar.gz

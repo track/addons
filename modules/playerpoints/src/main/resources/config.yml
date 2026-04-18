@@ -1,5 +1,5 @@
 # PlayerPoints Addon Configuration
-# This addon tracks point transactions in ServerStats analytics
+# This addon tracks point transactions in Analyse
 
 # Enable debug logging for troubleshooting
 debug: false

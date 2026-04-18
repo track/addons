@@ -1,65 +1,92 @@
-name: Build and Release
+name: Release
 
 on:
   push:
-    tags:
-      - 'v*'  # Trigger on version tags like v1.0.0, v2.1.3, etc.
+    branches: [main]
+    paths:
+      - gradle.properties
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
-  build-and-release:
+  release:
+    name: Build and publish
     runs-on: ubuntu-latest
-    
-    permissions:
-      contents: write  # Required for creating releases
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: Set up Java 21
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read version from gradle.properties
+        id: version
+        run: |
+          VERSION=$(grep '^version=' gradle.properties | cut -d '=' -f2 | tr -d '[:space:]')
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not read version from gradle.properties"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Detected version: $VERSION"
+
+      - name: Check whether this version was already released
+        id: tag_check
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          if git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
+            echo "Tag $TAG already exists. Nothing to release."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Tag $TAG does not exist yet. Proceeding with release."
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up JDK 21
+        if: steps.tag_check.outputs.exists == 'false'
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          distribution: temurin
+          java-version: "21"
 
-      - name: Setup Gradle
+      - name: Set up Gradle
+        if: steps.tag_check.outputs.exists == 'false'
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build all modules
-        run: ./gradlew build
+      - name: Build
+        if: steps.tag_check.outputs.exists == 'false'
+        run: ./gradlew build --no-daemon
 
-      - name: Collect addon JARs
+      - name: Bundle jars
+        if: steps.tag_check.outputs.exists == 'false'
         run: |
-          mkdir -p release-jars
-          find modules -path "*/build/libs/*.jar" -name "serverstats-addon-*.jar" -exec cp {} release-jars/ \;
-          echo "Collected JARs:"
-          ls -la release-jars/
+          mkdir -p dist
+          find modules -path "*/build/libs/analyse-addon-*.jar" -exec cp {} dist/ \;
+          cd dist && zip -j "analyse-addons-${{ steps.version.outputs.version }}.zip" analyse-addon-*.jar
+          ls -la
 
-      - name: Get version from tag
-        id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      - name: Create tag
+        if: steps.tag_check.outputs.exists == 'false'
+        run: |
+          git tag "${{ steps.version.outputs.tag }}"
+          git push origin "${{ steps.version.outputs.tag }}"
 
-      - name: Create Release
+      - name: Create GitHub Release
+        if: steps.tag_check.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          name: Release ${{ github.ref_name }}
-          body: |
-            ## ServerStats Addons ${{ github.ref_name }}
-            
-            ### Included Addons
-            - **ShopGUIPlus** - Tracks shop purchases and sales
-            - **Votifier** - Tracks player votes
-            - **PlayerPoints** - Tracks point transactions
-            
-            ### Installation
-            1. Download the addon JAR(s) you want
-            2. Place them in `plugins/ServerStats/addons/`
-            3. Restart your server or run `/serverstats reload`
-            
-            ### Requirements
-            - ServerStats plugin
-            - The corresponding plugin for each addon (ShopGUIPlus, NuVotifier, etc.)
-          files: release-jars/*.jar
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Analyse Addons ${{ steps.version.outputs.version }}
           draft: false
-          prerelease: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
           generate_release_notes: true
+          files: |
+            dist/analyse-addon-*.jar
+            dist/analyse-addons-${{ steps.version.outputs.version }}.zip

@@ -1,12 +1,12 @@
 # ShopGUIPlus Addon Configuration
-# This addon tracks shop transactions in ServerStats analytics
+# This addon tracks shop transactions in Analyse
 
 # Enable debug logging for troubleshooting
 debug: false
 
 tracking:
   # Which transaction results to track
-  # Only transactions with these results will be sent to ServerStats
+  # Only transactions with these results will be sent to Analyse
   #
   # Available options:
   #   - SUCCESS          - Transaction completed successfully

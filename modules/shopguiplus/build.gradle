@@ -13,5 +13,5 @@ dependencies {
 }
 
 jar {
-    archiveBaseName.set('serverstats-addon-shopguiplus')
+    archiveBaseName.set('analyse-addon-shopguiplus')
 }

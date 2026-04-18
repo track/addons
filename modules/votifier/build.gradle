@@ -15,5 +15,5 @@ dependencies {
 }
 
 jar {
-    archiveBaseName.set('serverstats-addon-votifier')
+    archiveBaseName.set('analyse-addon-votifier')
 }

@@ -15,5 +15,5 @@ dependencies {
 }
 
 jar {
-    archiveBaseName.set('serverstats-addon-playerpoints')
+    archiveBaseName.set('analyse-addon-playerpoints')
 }

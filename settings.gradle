@@ -1,4 +1,4 @@
-rootProject.name = 'serverstats-addons'
+rootProject.name = 'analyse-addons'
 
 // Auto-discover all modules in the modules/ directory
 file('modules').eachDir { moduleDir ->

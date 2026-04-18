@@ -1,5 +1,5 @@
 # Votifier Addon Configuration
-# This addon tracks player votes in ServerStats analytics
+# This addon tracks player votes in Analyse
 
 # Enable debug logging for troubleshooting
 debug: false
