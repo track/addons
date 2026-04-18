@@ -58,7 +58,7 @@ jobs:
 
       - name: Set up Gradle
         if: steps.tag_check.outputs.exists == 'false'
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Build
         if: steps.tag_check.outputs.exists == 'false'
